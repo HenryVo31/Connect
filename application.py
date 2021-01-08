@@ -272,7 +272,7 @@ def validate_display_name():
 
 # Upload file to Amazon S3
 def upload_to_s3(file_name, key_name):
-    s3 = boto3.client('s3', aws_access_key_id="AKIAQWXTFYXYEET5EK4G", aws_secret_access_key="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", region_name="ca-central-1")
+    s3 = boto3.client('s3', aws_access_key_id="ACCESS_KEY", aws_secret_access_key="SECRET_ACCESS_KEY", region_name="ca-central-1")
     bucket = 'connectapp-images'
     s3.upload_file(file_name, bucket, key_name, ExtraArgs={'ACL': 'public-read'})
 
