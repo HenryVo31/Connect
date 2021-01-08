@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block script %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Login | Connect
+{% endblock %}
+
+{% block body %}
+	<div class="wrapper-login">
+		<!-- Nav bar !-->
+		<div class="home-nav-bar">
+			<a href="{{ url_for('index') }}" class="home-nav-link">
+				<div class="logo">
+					<div class="home-nav-logo">
+						<img src="static/img/logo.jpg">
+					</div>
+					<div class="home-nav-title">
+						<span>Connect</span>
+					</div>
+				</div>
+			</a>
+
+			<div class="nav-button-login">
+				<a href="{{ url_for('login') }}">Sign in</a>
+			</div>
+		</div>
+
+		<!-- Body !-->
+		<div class="outer-body-login">
+			<div class="body-login">
+				<header>
+					Sign in
+				</header>
+				<div class="inner-body-login">
+					<div class="login-body-form">
+						<div class="error-block">
+							<div class="error-innerblock">
+								Error
+							</div>
+						</div>
+						<form action="{{ url_for('login') }}" method="POST" class="login-form">
+
+							<h1>Username</h1>
+							<input name="username" class="login-username" type="text">
+
+							<h1>Password</h1>
+							<input name="password" class="login-password" type="password"> <br>
+
+							<button type="submit" class="login-button">Sign in</button>
+
+							<div class="not-member">
+								Not a member yet? <a href="{{ url_for('register') }}">Sign up</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Javascript !-->
+	<script type="text/javascript" src="{{ url_for('static', filename='js/login.js') }}"></script>
+	<!-- End Javascript !-->
+{% endblock %}
+

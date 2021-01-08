@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block script %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Edit Profile | Connect
+{% endblock %}
+
+{% block body %}
+	<div class="wrapper-display-name">
+		<!-- Nav bar !-->
+		<div class="home-nav-bar alter-nav-bar">
+			<a href="{{ url_for('index') }}" class="home-nav-link">
+				<div class="logo">
+					<div class="home-nav-logo">
+						<img src="static/img/logo.jpg">
+					</div>
+					<div class="home-nav-title">
+						<span>Connect</span>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<!-- Body !-->
+		<div class="body-display-name">
+			<header>
+				Welcome to Connect!
+			</header>
+			<div class="outer-body-display-name">
+				<div class="inner-body-display-name">
+					<p>
+						Before proceeding, you must choose a display name and profile picture to represent yourself in the chats.
+						Please avoid choosing any offensive or sensitive materials. For your own security, also avoid displaying any personal information as it will be shown to everyone using this website.
+					</p>
+					<div class="error-block-outerdiv">
+						<div class="error-block">
+							<div class="error-innerblock">
+								Error
+							</div>
+						</div>
+					</div>
+					<div class="display-name-form-div">
+						<form action="{{ url_for('display_name') }}" method="POST" class="display-name-form" enctype="multipart/form-data">
+							<div class="profile-picture-div">
+								<img src="{{ image }}" class="profile-picture-src">
+								<input name="profile_picture" type="file" accept="image/*" class="profile-picture">
+							</div>
+							<input name="display_name" placeholder="Enter a Display Name" type="text" class="display-name-input"> <br> <br>
+							<button type="submit" class="display-name-btn">Confirm</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Javascript !-->
+	<script type="text/javascript" src="{{ url_for('static', filename='js/display_name.js') }}"></script>
+	<!-- End Javascript !-->
+{% endblock %}
+

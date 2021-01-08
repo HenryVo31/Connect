@@ -1,0 +1,215 @@
+{% extends "layout.html" %}
+
+{% block script %}
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+	<!-- Socket.io Javascript -->
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Messages | Connect
+{% endblock %}
+
+{% block body %}
+	<div class="wrapper-message">
+		<!-- Channel panel !-->
+		<div class="channel-panel">
+			<div class="channel-panel-innerdiv">
+				<div id="display-name-user">
+					<div class="display-name-div">
+						<span id="display_name_for_JS">{{ display_name_user }}</span> 
+					</div>
+					<div class="display-name-edit-div">
+						<a id="change_display_name_button" href="{{ url_for('display_name') }}"><i class="fas fa-pen-square"></i></a>
+					</div>
+					<div class="display-name-close-menu">
+						<i class="fas fa-chevron-circle-left close-menu-btn" onclick="channel_panel_close()"></i>
+					</div>
+				</div>
+
+				<header id="add_channel">
+					<a onclick="open_overlay()">
+						<i class="fas fa-plus-circle"></i> Channels
+					</a>
+				</header>
+
+				<div class="channel-list-div">
+					<ul id="channel_list">
+						{% for channel in channel_list %}
+							{% if channel[1] != "none" %}
+								{% if channel[0] == current_channel %}
+									<div class="chosen-channel">
+										<button class="list-group-item-private">{{ channel[0] }} <i class="fa fa-lock" aria-hidden="true"></i></button>
+									</div>
+								{% else %}
+									<div class="other-channel">
+										<button class="list-group-item-private">{{ channel[0] }} <i class="fa fa-lock" aria-hidden="true"></i></button>
+									</div>
+								{% endif %}
+
+							{% elif channel[1] == "none" %}
+								{% if channel[0] == current_channel %}
+									<div class="chosen-channel">
+										<button class="list-group-item">{{ channel[0] }}</button>
+									</div>
+								{% else %}
+									<div class="other-channel">
+										<button class="list-group-item">{{ channel[0] }}</button>
+									</div>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main message panel !-->
+		<div class="message-panel">
+
+			<!-- Info panel !-->
+			<div class="info-panel">
+				<div class="message-open-menu-div">
+					<i class="fas fa-chevron-circle-right open-menu-btn" onclick="channel_panel_open()"></i> {{ current_channel }}
+				</div>
+				<div class="message-logout-div">
+					<a href="{{ url_for('logout') }}">
+						Log out
+					</a>
+				</div>
+			</div>
+
+			<!-- Message box !-->
+			<div class="message-box">
+				<ul id="message-list">
+					{% for chat in all_chat %}
+						<div class="message-item">
+							<div class="message-item-img">
+								<img src="{{ chat.image }}">
+							</div>
+							<div class="message-item-body">
+								<header>
+									{{ chat.display_name }}
+								</header>
+								<div class="chat-time-outer">
+									<div class="chat-time-inner">{{ chat.time }}</div>
+								</div>
+								{% if "https://connectapp-images.s3.ca-central-1.amazonaws.com" in chat.messages %}
+									<a href="{{ chat.messages }}"><li>
+										<div class="chat-message-file-div">
+											<div class="chat-message-file-innerdiv">
+												<i class="fas fa-file"></i> <div class="chat-message-file">
+												{% set file_links = "https://connectapp-images.s3.ca-central-1.amazonaws.com/" + chat.username + "instance/root/" %}
+												{{ chat.messages | replace(file_links, "") }}</div>
+											</div>
+										</div>
+									</li></a>
+
+								{% elif "https://" in chat.messages %}
+									<a href="{{ chat.messages }}"><li>{{ chat.messages }}</li></a>
+
+								{% else %}
+									<li>{{ chat.messages }}</li>
+								{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+				</ul>
+			</div>
+
+			<!-- Input box !-->
+			<div class="input-box">
+				<!-- To cancel auto-complete: !-->
+				<div class="message-box-div">
+					<input style="display: none" type="password">
+					<div class="message-box-innerdiv">
+						<i class="fas fa-plus" onclick="open_upload_overlay()"></i>
+						<input id="input-message" type="text" placeholder="Your message..." autocomplete="off">
+					</div>
+					<button id="message-button"></button>
+				</div>
+			</div>
+
+			<form id="hidden-form" action="{{ url_for('message') }}" method="POST">
+				<input name="current_channel" id="hidden-input" type="text">
+			</form>
+		</div>
+
+		<!-- Add channel Overlay !-->
+		<div id="add_channel_overlay">
+			<div id="inner_overlay_box">
+				<div id="close_overlay_button">
+					<a><i onclick="close_overlay()" class="fas fa-times"></i></a>
+				</div>
+
+				<header>Create a new channel</header>
+
+				<div class="add-channel-error-div">
+					<div class="add-channel-error-innerdiv">
+						Error
+					</div>
+				</div>
+
+				<form action="{{ url_for('add_channel') }}" method="POST" class="add-channel-form">
+					<input style="display: none" type="password">
+
+					Public <input id="public_radio" name="public_private" type="radio" value="public" checked="checked" onclick="hide_key()">
+					Private <input id="private_radio" name="public_private" type="radio" value="private" onclick="show_key()"> <br>
+
+					<input name="new_channel" id="create_channel_input" type="text" placeholder="Channel's name" autocomplete="off"> <br>
+
+					<input name="key" id="key_input" type="password" placeholder="Channel's key" autocomplete="off"> <br>
+
+					<button type="submit" class="add-channel-btn">Create</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Channel's password Overlay !-->
+		<div id="channel_key_overlay">
+			<div id="channel_key_content">
+				<span><i onclick="close_channel_key_overlay()" class="fas fa-times"></i></span>
+
+				<p>Enter the channel's key</p>
+
+				<div class="channel-key-error-div">
+					<div class="channel-key-error-innerdiv">
+						Incorrect password
+					</div>
+				</div>
+
+				<input id="enter_channel_key" type="password" placeholder="Channel's key" autocomplete="off"><br>
+
+				<button id="join_private_channel_button">Join</button>
+			</div>
+		</div>
+
+		<!-- Upload file overlay !-->
+		<div class="upload-file-overlay">
+			<div class="upload-file-innerdiv">
+				<div class="upload-error-div">
+					<div class="upload-error-innerdiv">
+						No file selected
+					</div>
+				</div>
+				<div class="upload-file-div">
+					<form id="upload-form">
+						<input name="upload_file" type="file" id="upload-file">
+					</form>
+				</div>
+				<div class="upload-file-btns">
+					<button class="upload-button-send" onclick="upload_file()">Upload</button>
+					<a class="upload-button-cancel" onclick="close_upload_overlay()">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Javascript !-->
+	<script type="text/javascript" src="{{ url_for('static', filename='js/message.js') }}"></script>
+	<!-- End Javascript !-->
+{% endblock %}
+

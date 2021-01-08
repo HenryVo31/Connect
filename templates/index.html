@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home | Connect
+{% endblock %}
+
+{% block body %}
+	<div class="wrapper">
+		<!-- Nav Bar !-->
+		<div class="home-nav-bar">
+			<a href="{{ url_for('index') }}" class="home-nav-link">
+				<div class="logo">
+					<div class="home-nav-logo">
+						<img src="static/img/logo.jpg">
+					</div>
+					<div class="home-nav-title">
+						<span>Connect</span>
+					</div>
+				</div>
+			</a>
+
+			<div class="nav-button">
+				<a href="{{ url_for('login') }}">Sign in</a>
+			</div>
+		</div>
+
+		<!-- Main body !-->
+		<div class="home-body-intro">
+			<div class="home-body-text">
+				<header>
+					Let's Connect!
+				</header>
+				<p>
+					Connect is a free online messaging service that allows you to chat with your team, your friends and your family.
+					Fast, user-friendly and secure, Connect will provide you with a platform to
+					communicate with anyone.
+				</p>
+				<a href="{{ url_for('login') }}">Start now</a>
+			</div>
+
+			<div class="home-body-image">
+				<img src="static/img/connect_world_image.jpg">
+			</div>
+		</div>
+
+		<div class="home-features">
+			<div class="home-features-innerdiv">
+				<div class="home-sharefiles">
+					<i class="far fa-file-alt"></i>
+					<header>Upload and Share files</header>
+					<p>Share any images and document files. PDFs, Word and Excel are all supported file types</p>
+				</div>
+
+				<div class="home-realtime">
+					<i class="far fa-comments"></i>
+					<header>Real-time messaging</header>
+					<p>Send messages in real-time with no delay and you can receieve messages just as quickly</p>
+				</div>
+
+				<div class="home-channels">
+					<i class="fas fa-columns"></i>
+					<header>Public and Private channels</header>
+					<p>Create a channel with public access, or a password-protected channel for personal uses</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="home-socketio">
+			<div class="home-socketio-innerdiv">
+				<div class="home-socketio-img">
+					<img src="static/img/realtime_messaging.jpg">
+				</div>
+
+				<div class="home-socketio-body">
+					<header><img src="static/img/socketio_logo.jpg"></header>
+					<p>Socket.io 2.0 was used to architect this real-time chat system, providing
+					a bi-directional communciation channel between a cilent and a server.</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer !-->
+		<div class="home-footer">
+			<footer>
+				&copy; Copyright 2020 Connect
+			</footer>
+		</div>
+	</div> 
+{% endblock %}
+
